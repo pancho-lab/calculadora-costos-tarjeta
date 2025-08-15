@@ -1,0 +1,70 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { EmpresaDispositivoSchema } from '@/lib/schemas'
+import { z } from 'zod'
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const body = await request.json()
+    
+    const updateSchema = EmpresaDispositivoSchema.omit({ id: true })
+    const validatedData = updateSchema.parse(body)
+    
+    const empresa = await prisma.empresaDispositivo.update({
+      where: { id: parseInt(id) },
+      data: validatedData
+    })
+    
+    return NextResponse.json(empresa)
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Datos inválidos', details: error.errors },
+        { status: 400 }
+      )
+    }
+    
+    console.error('Error updating empresa:', error)
+    return NextResponse.json(
+      { error: 'Error al actualizar empresa' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    
+    // Check if empresa has associated plans
+    const planesCount = await prisma.plan.count({
+      where: { empresaId: parseInt(id) }
+    })
+    
+    if (planesCount > 0) {
+      return NextResponse.json(
+        { error: 'No se puede eliminar la empresa porque tiene planes asociados' },
+        { status: 400 }
+      )
+    }
+    
+    await prisma.empresaDispositivo.delete({
+      where: { id: parseInt(id) }
+    })
+    
+    return NextResponse.json({ message: 'Empresa eliminada exitosamente' })
+  } catch (error) {
+    console.error('Error deleting empresa:', error)
+    return NextResponse.json(
+      { error: 'Error al eliminar empresa' },
+      { status: 500 }
+    )
+  }
+}

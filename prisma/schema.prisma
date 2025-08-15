@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum BaseIVA {
+  COMISION_ARANCEL
+  SOLO_COMISION
+  MONTO_EFECTIVO
+  MONTO_TARJETA
+}
+
+enum BaseIIBB {
+  MONTO_TARJETA
+  MONTO_EFECTIVO
+}
+
+model EmpresaDispositivo {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+  
+  planes Plan[]
+  simulaciones Simulacion[]
+  
+  @@map("empresas_dispositivos")
+}
+
+model Tarjeta {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+  
+  planes Plan[]
+  simulaciones Simulacion[]
+  
+  @@map("tarjetas")
+}
+
+model Plan {
+  id              Int               @id @default(autoincrement())
+  empresaId       Int
+  tarjetaId       Int
+  nombre          String
+  codigoOperativo String?
+  cuotas          Int
+  pctComision     Float
+  pctArancel      Float
+  pctIVA          Float
+  pctIIBB         Float
+  baseIVA         BaseIVA           @default(COMISION_ARANCEL)
+  baseIIBB        BaseIIBB          @default(MONTO_TARJETA)
+  activo          Boolean           @default(true)
+  vigenciaDesde   DateTime          @default(now())
+  vigenciaHasta   DateTime?
+  
+  empresa         EmpresaDispositivo @relation(fields: [empresaId], references: [id])
+  tarjeta         Tarjeta           @relation(fields: [tarjetaId], references: [id])
+  simulaciones    Simulacion[]
+  
+  @@unique([empresaId, tarjetaId, nombre, vigenciaDesde])
+  @@map("planes")
+}
+
+model InteresPorCuotas {
+  id            Int       @id @default(autoincrement())
+  cuotas        Int
+  interesTaller Float
+  interesReal   Float
+  vigenciaDesde DateTime  @default(now())
+  vigenciaHasta DateTime?
+  
+  @@unique([cuotas, vigenciaDesde])
+  @@map("interes_por_cuotas")
+}
+
+model ParametrosGlobales {
+  id                    Int     @id @default(autoincrement())
+  pctIVAporDefecto      Float   @default(0.21)
+  incluirIVAComoCosto   Boolean @default(false)
+  redondeoDecimales     Int     @default(2)
+  vigenciaDesde         DateTime @default(now())
+  vigenciaHasta         DateTime?
+  
+  @@map("parametros_globales")
+}
+
+model Simulacion {
+  id                Int       @id @default(autoincrement())
+  fecha             DateTime  @default(now())
+  montoEfectivo     Float
+  recargoClientePct Float
+  empresaId         Int
+  tarjetaId         Int
+  planId            Int
+  cuotas            Int
+  resultados        String    // JSON con desglose calculado
+  
+  empresa           EmpresaDispositivo @relation(fields: [empresaId], references: [id])
+  tarjeta           Tarjeta           @relation(fields: [tarjetaId], references: [id])
+  plan              Plan              @relation(fields: [planId], references: [id])
+  
+  @@map("simulaciones")
+}
