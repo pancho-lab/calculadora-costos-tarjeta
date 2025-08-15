@@ -503,7 +503,14 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         inputSimulado,
         plan,
         interesConfig || undefined,
-        { redondeoDecimales: 2 } // Parámetros globales por defecto
+        { 
+          id: 1, 
+          vigenciaDesde: new Date(), 
+          pctIVAporDefecto: 0.21, 
+          incluirIVAComoCosto: false, 
+          redondeoDecimales: 2,
+          vigenciaHasta: null
+        } // Parámetros globales por defecto
       )
       
       const montoNeto = resultados.montoNeto

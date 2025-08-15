@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Calculator, Save, Share, Copy } from 'lucide-react'
 import { toast } from 'sonner'
+import { Plan } from '@/lib/schemas'
 
 export default function CalculadoraForm() {
   const {
@@ -21,12 +22,11 @@ export default function CalculadoraForm() {
     loading,
     setInput,
     setResultados,
-    setLoading,
-    getPlanesDisponibles
+    setLoading
   } = useCalculadoraStore()
 
-  const { calcularRecargoAutomatico, planes } = useConfig()
-  const [planesDisponibles, setPlanesDisponibles] = useState<any[]>([])
+  const { calcularRecargoAutomatico } = useConfig()
+  const [planesDisponibles, setPlanesDisponibles] = useState<Plan[]>([])
   const [montoFormateado, setMontoFormateado] = useState('')
   const calculator = new CalculationEngine()
 
@@ -82,7 +82,7 @@ export default function CalculadoraForm() {
 
         useCalculadoraStore.getState().setEmpresas(empresasData)
         useCalculadoraStore.getState().setTarjetas(tarjetasData)
-      } catch (error) {
+      } catch {
         toast.error('Error al cargar datos iniciales')
       } finally {
         setLoading(false)
@@ -107,7 +107,7 @@ export default function CalculadoraForm() {
         const planes = await response.json()
         useCalculadoraStore.getState().setPlanes(planes)
         setPlanesDisponibles(planes)
-      } catch (error) {
+      } catch {
         toast.error('Error al cargar planes')
       }
     }
@@ -183,9 +183,9 @@ export default function CalculadoraForm() {
       }
       
       toast.success(`Cálculo realizado con recargo automático del ${recargoOptimo}%`)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('🔥 DEBUG error:', error)
-      toast.error(error.message || 'Error al realizar el cálculo')
+      toast.error(error instanceof Error ? error.message : 'Error al realizar el cálculo')
     } finally {
       setLoading(false)
     }
@@ -247,7 +247,7 @@ Monto neto: ${calculator.formatearMoneda(resultados.montoNeto)}
             </div>
 
             {/* Recargo al cliente - Solo informativo */}
-            {input.recargoClientePct > 0 && (
+            {(input.recargoClientePct || 0) > 0 && (
               <div className="space-y-2">
                 <Label>Recargo al Cliente Calculado: {calculator.formatearPorcentaje(input.recargoClientePct || 0)}</Label>
                 <div className="p-3 bg-muted rounded-md">

@@ -27,7 +27,7 @@ export const PlanSchema = z.object({
   empresaId: z.number(),
   tarjetaId: z.number(),
   nombre: z.string().min(1, 'El nombre es requerido'),
-  codigoOperativo: z.string().optional(),
+  codigoOperativo: z.string().nullable().optional(),
   cuotas: z.number().int().min(1, 'Las cuotas deben ser mayor a 0'),
   pctComision: z.number().min(0).max(1, 'La comisión debe estar entre 0 y 100%'),
   pctArancel: z.number().min(0).max(1, 'El arancel debe estar entre 0 y 100%'),
@@ -37,7 +37,7 @@ export const PlanSchema = z.object({
   baseIIBB: BaseIIBBEnum,
   activo: z.boolean(),
   vigenciaDesde: z.date(),
-  vigenciaHasta: z.date().optional()
+  vigenciaHasta: z.date().nullable().optional()
 })
 
 export const InteresPorCuotasSchema = z.object({
@@ -46,7 +46,7 @@ export const InteresPorCuotasSchema = z.object({
   interesTaller: z.number().min(0),
   interesReal: z.number().min(0),
   vigenciaDesde: z.date(),
-  vigenciaHasta: z.date().optional()
+  vigenciaHasta: z.date().nullable().optional()
 })
 
 export const ParametrosGlobalesSchema = z.object({
@@ -55,7 +55,7 @@ export const ParametrosGlobalesSchema = z.object({
   incluirIVAComoCosto: z.boolean(),
   redondeoDecimales: z.number().int().min(0).max(4),
   vigenciaDesde: z.date(),
-  vigenciaHasta: z.date().optional()
+  vigenciaHasta: z.date().nullable().optional()
 })
 
 export const SimulacionInputSchema = z.object({

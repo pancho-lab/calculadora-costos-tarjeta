@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const empresaId = searchParams.get('empresaId')
     const tarjetaId = searchParams.get('tarjetaId')
     
-    const where: any = { activo: true }
+    const where: { activo: boolean; empresaId?: number; tarjetaId?: number } = { activo: true }
     
     if (empresaId) {
       where.empresaId = parseInt(empresaId)

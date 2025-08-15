@@ -5,7 +5,7 @@ import { CalculationEngine } from '@/lib/calculations'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { History, Calendar, Calculator, Trash2 } from 'lucide-react'
+import { History, Calendar, Calculator } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface SimulacionHistorial {
@@ -52,7 +52,7 @@ export default function HistorialCalculos() {
       } else {
         toast.error('Error al cargar el historial')
       }
-    } catch (error) {
+    } catch {
       toast.error('Error al cargar el historial')
     } finally {
       setLoading(false)
@@ -73,7 +73,7 @@ export default function HistorialCalculos() {
     })
   }
 
-  const replicarCalculo = (simulacion: SimulacionHistorial) => {
+  const replicarCalculo = () => {
     // Esto podría ser una función que actualice el store de la calculadora
     // con los datos de la simulación seleccionada
     toast.success('Cálculo replicado en la calculadora')
@@ -234,7 +234,7 @@ export default function HistorialCalculos() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => replicarCalculo(simulacion)}
+                  onClick={() => replicarCalculo()}
                   className="text-xs"
                 >
                   <Calculator className="h-3 w-3 mr-1" />
