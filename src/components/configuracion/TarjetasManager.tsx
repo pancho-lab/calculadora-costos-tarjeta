@@ -154,51 +154,98 @@ export default function TarjetasManager() {
           No hay tarjetas configuradas
         </div>
       ) : (
-        <div className="border rounded-lg overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="min-w-[60px]">ID</TableHead>
-                <TableHead className="min-w-[150px]">Nombre</TableHead>
-                <TableHead className="min-w-[150px]">Planes Asociados</TableHead>
-                <TableHead className="text-right min-w-[120px]">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tarjetas.map((tarjeta) => (
-                <TableRow key={tarjeta.id}>
-                  <TableCell className="font-mono text-sm">{tarjeta.id}</TableCell>
-                  <TableCell className="font-medium">{tarjeta.nombre}</TableCell>
-                  <TableCell>
-                    <span className="text-sm text-muted-foreground">
-                      Ver planes asociados
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1 sm:gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEdit(tarjeta)}
-                        className="h-8 w-8 p-0 sm:h-9 sm:w-9"
-                      >
-                        <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDelete(tarjeta)}
-                        className="text-destructive hover:text-destructive h-8 w-8 p-0 sm:h-9 sm:w-9"
-                      >
-                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+        <>
+          {/* Vista Desktop - Tabla */}
+          <div className="hidden sm:block border rounded-lg overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[60px]">ID</TableHead>
+                  <TableHead className="min-w-[150px]">Nombre</TableHead>
+                  <TableHead className="min-w-[150px]">Planes Asociados</TableHead>
+                  <TableHead className="text-right min-w-[120px]">Acciones</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {tarjetas.map((tarjeta) => (
+                  <TableRow key={tarjeta.id}>
+                    <TableCell className="font-mono text-sm">{tarjeta.id}</TableCell>
+                    <TableCell className="font-medium">{tarjeta.nombre}</TableCell>
+                    <TableCell>
+                      <span className="text-sm text-muted-foreground">
+                        Ver planes asociados
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(tarjeta)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDelete(tarjeta)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Vista Mobile - Cards */}
+          <div className="sm:hidden space-y-3">
+            {tarjetas.map((tarjeta) => (
+              <div
+                key={tarjeta.id}
+                className="border rounded-lg p-4 bg-card shadow-sm"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xs font-mono text-muted-foreground">
+                        ID: {tarjeta.id}
+                      </span>
+                    </div>
+                    <h4 className="font-medium text-base">{tarjeta.nombre}</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Ver planes asociados
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-2 pt-3 border-t">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleEdit(tarjeta)}
+                    className="flex-1"
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Editar
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDelete(tarjeta)}
+                    className="flex-1 text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Eliminar
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {loading && (

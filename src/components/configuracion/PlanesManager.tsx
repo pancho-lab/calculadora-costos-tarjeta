@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Plus, Edit, Trash2, Loader2, Filter, X, Building2, CreditCard } from 'lucide-react'
+import { Plus, Edit, Trash2, Loader2, Filter, X, Building2, CreditCard, ChevronDown } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Plan, BaseIVA, BaseIIBB } from '@/lib/schemas'
 
@@ -65,6 +65,7 @@ export default function PlanesManager() {
   const [submitting, setSubmitting] = useState(false)
   const [filtroEmpresa, setFiltroEmpresa] = useState<string>('all')
   const [filtroTarjeta, setFiltroTarjeta] = useState<string>('all')
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set())
   const [formData, setFormData] = useState<PlanFormData>({
     nombre: '',
     empresaId: null,
@@ -195,6 +196,17 @@ export default function PlanesManager() {
   const limpiarFiltros = () => {
     setFiltroEmpresa('all')
     setFiltroTarjeta('all')
+  }
+
+  // Toggle accordion para cards móviles
+  const toggleCardExpansion = (planId: number) => {
+    const newExpanded = new Set(expandedCards)
+    if (newExpanded.has(planId)) {
+      newExpanded.delete(planId)
+    } else {
+      newExpanded.add(planId)
+    }
+    setExpandedCards(newExpanded)
   }
 
   return (
@@ -564,84 +576,202 @@ export default function PlanesManager() {
           }
         </div>
       ) : (
-        <div className="border rounded-lg overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="min-w-[100px]">Empresa</TableHead>
-                <TableHead className="min-w-[100px]">Tarjeta</TableHead>
-                <TableHead className="min-w-[120px]">Plan</TableHead>
-                <TableHead className="min-w-[70px] text-center">Cuotas</TableHead>
-                <TableHead className="min-w-[80px] text-center">Comisión</TableHead>
-                <TableHead className="min-w-[80px] text-center">Arancel</TableHead>
-                <TableHead className="min-w-[70px] text-center">IVA</TableHead>
-                <TableHead className="min-w-[70px] text-center">IIBB</TableHead>
-                <TableHead className="min-w-[80px] text-center">Estado</TableHead>
-                <TableHead className="text-right min-w-[100px]">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {planesFiltrados.map((plan) => (
-                <TableRow key={plan.id}>
-                  <TableCell className="font-medium text-sm">
-                    <span className="truncate block max-w-[100px]">
-                      {empresas.find(e => e.id === plan.empresaId)?.nombre}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    <span className="truncate block max-w-[100px]">
-                      {tarjetas.find(t => t.id === plan.tarjetaId)?.nombre}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    <div className="max-w-[120px]">
-                      <span className="truncate block">{plan.nombre}</span>
-                      {plan.codigoOperativo && (
-                        <span className="text-xs text-muted-foreground">
-                          ({plan.codigoOperativo})
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center text-sm">{plan.cuotas}</TableCell>
-                  <TableCell className="font-mono text-center text-sm">{(plan.pctComision * 100).toFixed(1)}%</TableCell>
-                  <TableCell className="font-mono text-center text-sm">{(plan.pctArancel * 100).toFixed(1)}%</TableCell>
-                  <TableCell className="font-mono text-center text-sm">{(plan.pctIVA * 100).toFixed(1)}%</TableCell>
-                  <TableCell className="font-mono text-center text-sm">{(plan.pctIIBB * 100).toFixed(1)}%</TableCell>
-                  <TableCell className="text-center">
-                    <span className={`px-2 py-1 text-xs rounded-full whitespace-nowrap ${
-                      plan.activo 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {plan.activo ? 'Activo' : 'Inactivo'}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEdit(plan)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDelete(plan)}
-                        className="text-destructive hover:text-destructive h-8 w-8 p-0"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </TableCell>
+        <>
+          {/* Vista Desktop - Tabla */}
+          <div className="hidden sm:block border rounded-lg overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[100px]">Empresa</TableHead>
+                  <TableHead className="min-w-[100px]">Tarjeta</TableHead>
+                  <TableHead className="min-w-[120px]">Plan</TableHead>
+                  <TableHead className="min-w-[70px] text-center">Cuotas</TableHead>
+                  <TableHead className="min-w-[80px] text-center">Comisión</TableHead>
+                  <TableHead className="min-w-[80px] text-center">Arancel</TableHead>
+                  <TableHead className="min-w-[70px] text-center">IVA</TableHead>
+                  <TableHead className="min-w-[70px] text-center">IIBB</TableHead>
+                  <TableHead className="min-w-[80px] text-center">Estado</TableHead>
+                  <TableHead className="text-right min-w-[100px]">Acciones</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {planesFiltrados.map((plan) => (
+                  <TableRow key={plan.id}>
+                    <TableCell className="font-medium text-sm">
+                      <span className="truncate block max-w-[100px]">
+                        {empresas.find(e => e.id === plan.empresaId)?.nombre}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      <span className="truncate block max-w-[100px]">
+                        {tarjetas.find(t => t.id === plan.tarjetaId)?.nombre}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      <div className="max-w-[120px]">
+                        <span className="truncate block">{plan.nombre}</span>
+                        {plan.codigoOperativo && (
+                          <span className="text-xs text-muted-foreground">
+                            ({plan.codigoOperativo})
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center text-sm">{plan.cuotas}</TableCell>
+                    <TableCell className="font-mono text-center text-sm">{(plan.pctComision * 100).toFixed(1)}%</TableCell>
+                    <TableCell className="font-mono text-center text-sm">{(plan.pctArancel * 100).toFixed(1)}%</TableCell>
+                    <TableCell className="font-mono text-center text-sm">{(plan.pctIVA * 100).toFixed(1)}%</TableCell>
+                    <TableCell className="font-mono text-center text-sm">{(plan.pctIIBB * 100).toFixed(1)}%</TableCell>
+                    <TableCell className="text-center">
+                      <span className={`px-2 py-1 text-xs rounded-full whitespace-nowrap ${
+                        plan.activo 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {plan.activo ? 'Activo' : 'Inactivo'}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(plan)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDelete(plan)}
+                          className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Vista Mobile - Cards Acordeón */}
+          <div className="sm:hidden space-y-3">
+            {planesFiltrados.map((plan) => {
+              const isExpanded = expandedCards.has(plan.id)
+              return (
+                <div
+                  key={plan.id}
+                  className="border rounded-lg bg-card shadow-sm overflow-hidden"
+                >
+                  {/* Header del Card - Siempre visible */}
+                  <div 
+                    className="p-4 cursor-pointer hover:bg-muted/30 transition-colors"
+                    onClick={() => toggleCardExpansion(plan.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-mono text-muted-foreground">
+                            {empresas.find(e => e.id === plan.empresaId)?.nombre} •{' '}
+                            {tarjetas.find(t => t.id === plan.tarjetaId)?.nombre}
+                          </span>
+                        </div>
+                        <h4 className="font-medium text-base truncate">{plan.nombre}</h4>
+                        <div className="flex items-center gap-3 mt-1">
+                          <span className="text-sm text-muted-foreground">
+                            {plan.cuotas} cuotas
+                          </span>
+                          <span className={`px-2 py-0.5 text-xs rounded-full ${
+                            plan.activo 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {plan.activo ? 'Activo' : 'Inactivo'}
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronDown 
+                        className={`h-5 w-5 text-muted-foreground transition-transform ${
+                          isExpanded ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Contenido Expandible */}
+                  {isExpanded && (
+                    <div className="border-t bg-muted/20">
+                      <div className="p-4 space-y-4">
+                        {/* Información Detallada */}
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <span className="text-muted-foreground">Comisión:</span>
+                            <span className="font-mono ml-2">{(plan.pctComision * 100).toFixed(2)}%</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Arancel:</span>
+                            <span className="font-mono ml-2">{(plan.pctArancel * 100).toFixed(2)}%</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">IVA:</span>
+                            <span className="font-mono ml-2">{(plan.pctIVA * 100).toFixed(2)}%</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">IIBB:</span>
+                            <span className="font-mono ml-2">{(plan.pctIIBB * 100).toFixed(2)}%</span>
+                          </div>
+                        </div>
+
+                        {/* Bases de Cálculo */}
+                        <div className="text-sm space-y-1">
+                          <div>
+                            <span className="text-muted-foreground">Base IVA:</span>
+                            <span className="ml-2">{plan.baseIVA.replace('_', ' ')}</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Base IIBB:</span>
+                            <span className="ml-2">{plan.baseIIBB.replace('_', ' ')}</span>
+                          </div>
+                          {plan.codigoOperativo && (
+                            <div>
+                              <span className="text-muted-foreground">Código:</span>
+                              <span className="ml-2 font-mono">{plan.codigoOperativo}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Acciones */}
+                        <div className="flex gap-2 pt-3 border-t">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEdit(plan)}
+                            className="flex-1"
+                          >
+                            <Edit className="h-4 w-4 mr-2" />
+                            Editar
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDelete(plan)}
+                            className="flex-1 text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Eliminar
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </>
       )}
 
       {loading && (
