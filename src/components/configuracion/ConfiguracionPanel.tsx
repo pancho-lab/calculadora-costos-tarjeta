@@ -27,11 +27,11 @@ export default function ConfiguracionPanel() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Configuración</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold">Configuración</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Administra empresas, tarjetas y planes de pago
           </p>
         </div>
@@ -39,6 +39,7 @@ export default function ConfiguracionPanel() {
           onClick={refreshData}
           variant="outline"
           disabled={loading}
+          className="w-full sm:w-auto"
         >
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -59,10 +60,10 @@ export default function ConfiguracionPanel() {
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="empresas">Empresas</TabsTrigger>
-          <TabsTrigger value="tarjetas">Tarjetas</TabsTrigger>
-          <TabsTrigger value="planes">Planes</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 h-auto">
+          <TabsTrigger value="empresas" className="text-xs sm:text-sm">Empresas</TabsTrigger>
+          <TabsTrigger value="tarjetas" className="text-xs sm:text-sm">Tarjetas</TabsTrigger>
+          <TabsTrigger value="planes" className="text-xs sm:text-sm">Planes</TabsTrigger>
         </TabsList>
 
         <TabsContent value="empresas" className="space-y-4">

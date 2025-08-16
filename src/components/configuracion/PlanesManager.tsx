@@ -199,13 +199,13 @@ export default function PlanesManager() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <h3 className="text-base sm:text-lg font-medium">
           Planes de Pago ({planesFiltrados.length} de {planes.length})
         </h3>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => resetForm()}>
+            <Button onClick={() => resetForm()} className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Agregar Plan
             </Button>
@@ -226,7 +226,7 @@ export default function PlanesManager() {
 
               <div className="grid gap-4 py-4">
                 {/* Información básica */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="nombre">Nombre del Plan</Label>
                     <Input
@@ -301,7 +301,7 @@ export default function PlanesManager() {
                 {/* Porcentajes */}
                 <div className="space-y-4">
                   <h4 className="font-medium text-sm">Porcentajes (%)</h4>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="pctComision">Comisión (%)</Label>
                       <Input
@@ -360,7 +360,7 @@ export default function PlanesManager() {
                 {/* Bases de cálculo */}
                 <div className="space-y-4">
                   <h4 className="font-medium text-sm">Bases de Cálculo</h4>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label>Base IVA</Label>
                       <Select
@@ -428,16 +428,16 @@ export default function PlanesManager() {
       </div>
 
       {/* Filtros Mejorados */}
-      <div className="bg-gradient-to-r from-card via-card/95 to-card border border-border/60 shadow-sm p-6 rounded-xl space-y-6">
+      <div className="bg-gradient-to-r from-card via-card/95 to-card border border-border/60 shadow-sm p-4 sm:p-6 rounded-xl space-y-4 sm:space-y-6">
         {/* Header con icono y acciones */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Filter className="h-5 w-5 text-primary" />
+            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-foreground">Filtros de Búsqueda</h4>
-              <p className="text-sm text-muted-foreground">Encuentra planes específicos por empresa y tarjeta</p>
+              <h4 className="text-base sm:text-lg font-semibold text-foreground">Filtros de Búsqueda</h4>
+              <p className="text-xs sm:text-sm text-muted-foreground">Encuentra planes específicos por empresa y tarjeta</p>
             </div>
           </div>
           {(filtroEmpresa !== 'all' || filtroTarjeta !== 'all') && (
@@ -445,7 +445,7 @@ export default function PlanesManager() {
               variant="outline" 
               size="sm" 
               onClick={limpiarFiltros}
-              className="gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+              className="gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 w-full sm:w-auto"
             >
               <X className="h-4 w-4" />
               Limpiar filtros
@@ -454,7 +454,7 @@ export default function PlanesManager() {
         </div>
 
         {/* Filtros principales */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {/* Filtro Empresa */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -516,8 +516,8 @@ export default function PlanesManager() {
 
         {/* Resultado y estadísticas */}
         <div className="pt-4 border-t border-border/40">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
               <div className="text-sm">
                 <span className="text-muted-foreground">Resultados: </span>
                 <span className="font-semibold text-foreground">
@@ -537,17 +537,17 @@ export default function PlanesManager() {
             
             {/* Indicadores de filtros activos */}
             {(filtroEmpresa !== 'all' || filtroTarjeta !== 'all') && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {filtroEmpresa && (
                   <div className="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs rounded-md">
                     <Building2 className="h-3 w-3" />
-                    {empresas.find(e => e.id.toString() === filtroEmpresa)?.nombre}
+                    <span className="truncate max-w-[100px]">{empresas.find(e => e.id.toString() === filtroEmpresa)?.nombre}</span>
                   </div>
                 )}
                 {filtroTarjeta && (
                   <div className="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs rounded-md">
                     <CreditCard className="h-3 w-3" />
-                    {tarjetas.find(t => t.id.toString() === filtroTarjeta)?.nombre}
+                    <span className="truncate max-w-[100px]">{tarjetas.find(t => t.id.toString() === filtroTarjeta)?.nombre}</span>
                   </div>
                 )}
               </div>
@@ -568,42 +568,48 @@ export default function PlanesManager() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Empresa</TableHead>
-                <TableHead>Tarjeta</TableHead>
-                <TableHead>Plan</TableHead>
-                <TableHead>Cuotas</TableHead>
-                <TableHead>Comisión</TableHead>
-                <TableHead>Arancel</TableHead>
-                <TableHead>IVA</TableHead>
-                <TableHead>IIBB</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
+                <TableHead className="min-w-[100px]">Empresa</TableHead>
+                <TableHead className="min-w-[100px]">Tarjeta</TableHead>
+                <TableHead className="min-w-[120px]">Plan</TableHead>
+                <TableHead className="min-w-[70px] text-center">Cuotas</TableHead>
+                <TableHead className="min-w-[80px] text-center">Comisión</TableHead>
+                <TableHead className="min-w-[80px] text-center">Arancel</TableHead>
+                <TableHead className="min-w-[70px] text-center">IVA</TableHead>
+                <TableHead className="min-w-[70px] text-center">IIBB</TableHead>
+                <TableHead className="min-w-[80px] text-center">Estado</TableHead>
+                <TableHead className="text-right min-w-[100px]">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {planesFiltrados.map((plan) => (
                 <TableRow key={plan.id}>
-                  <TableCell className="font-medium">
-                    {empresas.find(e => e.id === plan.empresaId)?.nombre}
+                  <TableCell className="font-medium text-sm">
+                    <span className="truncate block max-w-[100px]">
+                      {empresas.find(e => e.id === plan.empresaId)?.nombre}
+                    </span>
                   </TableCell>
-                  <TableCell>
-                    {tarjetas.find(t => t.id === plan.tarjetaId)?.nombre}
+                  <TableCell className="text-sm">
+                    <span className="truncate block max-w-[100px]">
+                      {tarjetas.find(t => t.id === plan.tarjetaId)?.nombre}
+                    </span>
                   </TableCell>
-                  <TableCell>
-                    {plan.nombre}
-                    {plan.codigoOperativo && (
-                      <span className="text-xs text-muted-foreground ml-1">
-                        ({plan.codigoOperativo})
-                      </span>
-                    )}
+                  <TableCell className="text-sm">
+                    <div className="max-w-[120px]">
+                      <span className="truncate block">{plan.nombre}</span>
+                      {plan.codigoOperativo && (
+                        <span className="text-xs text-muted-foreground">
+                          ({plan.codigoOperativo})
+                        </span>
+                      )}
+                    </div>
                   </TableCell>
-                  <TableCell>{plan.cuotas}</TableCell>
-                  <TableCell className="font-mono">{(plan.pctComision * 100).toFixed(2)}%</TableCell>
-                  <TableCell className="font-mono">{(plan.pctArancel * 100).toFixed(2)}%</TableCell>
-                  <TableCell className="font-mono">{(plan.pctIVA * 100).toFixed(2)}%</TableCell>
-                  <TableCell className="font-mono">{(plan.pctIIBB * 100).toFixed(2)}%</TableCell>
-                  <TableCell>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
+                  <TableCell className="text-center text-sm">{plan.cuotas}</TableCell>
+                  <TableCell className="font-mono text-center text-sm">{(plan.pctComision * 100).toFixed(1)}%</TableCell>
+                  <TableCell className="font-mono text-center text-sm">{(plan.pctArancel * 100).toFixed(1)}%</TableCell>
+                  <TableCell className="font-mono text-center text-sm">{(plan.pctIVA * 100).toFixed(1)}%</TableCell>
+                  <TableCell className="font-mono text-center text-sm">{(plan.pctIIBB * 100).toFixed(1)}%</TableCell>
+                  <TableCell className="text-center">
+                    <span className={`px-2 py-1 text-xs rounded-full whitespace-nowrap ${
                       plan.activo 
                         ? 'bg-green-100 text-green-800' 
                         : 'bg-gray-100 text-gray-800'
@@ -612,21 +618,22 @@ export default function PlanesManager() {
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
+                    <div className="flex justify-end gap-1">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleEdit(plan)}
+                        className="h-8 w-8 p-0"
                       >
-                        <Edit className="h-4 w-4" />
+                        <Edit className="h-3 w-3" />
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleDelete(plan)}
-                        className="text-destructive hover:text-destructive"
+                        className="text-destructive hover:text-destructive h-8 w-8 p-0"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
                   </TableCell>

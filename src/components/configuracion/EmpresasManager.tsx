@@ -91,13 +91,13 @@ export default function EmpresasManager() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <h3 className="text-base sm:text-lg font-medium">
           Empresas/Dispositivos ({empresas.length})
         </h3>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => resetForm()}>
+            <Button onClick={() => resetForm()} className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Agregar Empresa
             </Button>
@@ -154,20 +154,20 @@ export default function EmpresasManager() {
           No hay empresas configuradas
         </div>
       ) : (
-        <div className="border rounded-lg">
+        <div className="border rounded-lg overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Planes Asociados</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
+                <TableHead className="min-w-[60px]">ID</TableHead>
+                <TableHead className="min-w-[150px]">Nombre</TableHead>
+                <TableHead className="min-w-[150px]">Planes Asociados</TableHead>
+                <TableHead className="text-right min-w-[120px]">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {empresas.map((empresa) => (
                 <TableRow key={empresa.id}>
-                  <TableCell className="font-mono">{empresa.id}</TableCell>
+                  <TableCell className="font-mono text-sm">{empresa.id}</TableCell>
                   <TableCell className="font-medium">{empresa.nombre}</TableCell>
                   <TableCell>
                     <span className="text-sm text-muted-foreground">
@@ -175,21 +175,22 @@ export default function EmpresasManager() {
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
+                    <div className="flex justify-end gap-1 sm:gap-2">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleEdit(empresa)}
+                        className="h-8 w-8 p-0 sm:h-9 sm:w-9"
                       >
-                        <Edit className="h-4 w-4" />
+                        <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleDelete(empresa)}
-                        className="text-destructive hover:text-destructive"
+                        className="text-destructive hover:text-destructive h-8 w-8 p-0 sm:h-9 sm:w-9"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                     </div>
                   </TableCell>
