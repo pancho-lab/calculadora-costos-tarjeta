@@ -368,40 +368,54 @@ Monto neto: ${calculator.formatearMoneda(resultados.montoNeto)}
           <CardContent>
             {resultados ? (
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 p-4 bg-muted rounded-lg">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Monto con Tarjeta</p>
-                    <p className="text-2xl font-bold text-green-600">
+                {/* Resultados Principales - Responsive */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg">
+                    <p className="text-sm font-medium text-green-700 mb-1">Monto con Tarjeta</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-green-600">
                       {calculator.formatearMoneda(resultados.montoConTarjeta)}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Valor por Cuota</p>
-                    <p className="text-xl font-semibold">
+                  <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg">
+                    <p className="text-sm font-medium text-blue-700 mb-1">Valor por Cuota</p>
+                    <p className="text-xl sm:text-2xl font-bold text-blue-600">
                       {calculator.formatearMoneda(resultados.valorCuota)}
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <h4 className="font-semibold">Desglose de Costos</h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <span>Comisión:</span>
-                    <span className="font-mono">
-                      {calculator.formatearMoneda(resultados.comisionPesos)}
-                    </span>
-                    <span>Arancel:</span>
-                    <span className="font-mono">
-                      {calculator.formatearMoneda(resultados.arancelPesos)}
-                    </span>
-                    <span>IVA:</span>
-                    <span className="font-mono">
-                      {calculator.formatearMoneda(resultados.ivaRPesos)}
-                    </span>
-                    <span>IIBB:</span>
-                    <span className="font-mono">
-                      {calculator.formatearMoneda(resultados.iibbPesos)}
-                    </span>
+                {/* Desglose de Costos - Responsive */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-base">Desglose de Costos</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-2 p-3 bg-muted/50 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">Comisión:</span>
+                        <span className="font-mono font-semibold">
+                          {calculator.formatearMoneda(resultados.comisionPesos)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">Arancel:</span>
+                        <span className="font-mono font-semibold">
+                          {calculator.formatearMoneda(resultados.arancelPesos)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-2 p-3 bg-muted/50 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">IVA:</span>
+                        <span className="font-mono font-semibold">
+                          {calculator.formatearMoneda(resultados.ivaRPesos)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">IIBB:</span>
+                        <span className="font-mono font-semibold">
+                          {calculator.formatearMoneda(resultados.iibbPesos)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
